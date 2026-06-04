@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Raizes API</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7faf9;
+        --panel: #ffffff;
+        --panel-soft: #eef8f6;
+        --ink: #17211f;
+        --muted: #60716d;
+        --line: #d8e5e1;
+        --brand: #0f766e;
+        --brand-dark: #115e59;
+        --brand-soft: #d8f4ee;
+        --danger: #be123c;
+        --warning: #ca8a04;
+        --ok: #15803d;
+        --shadow: 0 18px 45px rgba(23, 33, 31, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top left, rgba(20, 184, 166, 0.14), transparent 32rem),
+          linear-gradient(180deg, #fbfefd 0%, var(--bg) 62%, #edf7f4 100%);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+        transform: none;
+      }
+
+      .shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 42px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 24px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .logo {
+        display: grid;
+        width: 46px;
+        height: 46px;
+        place-items: center;
+        border-radius: 8px;
+        background: var(--brand);
+        color: white;
+        font-weight: 900;
+        box-shadow: var(--shadow);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 26px;
+        line-height: 1.1;
+      }
+
+      .subtitle {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 7px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.78);
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 320px minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: var(--shadow);
+      }
+
+      .side {
+        position: sticky;
+        top: 18px;
+        padding: 18px;
+      }
+
+      .main {
+        display: grid;
+        gap: 18px;
+      }
+
+      .section {
+        padding: 18px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .hint {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+
+      label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      input,
+      select {
+        width: 100%;
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        outline: none;
+        padding: 9px 11px;
+      }
+
+      input:focus,
+      select:focus {
+        border-color: var(--brand);
+        box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+      }
+
+      .primary {
+        width: 100%;
+        min-height: 44px;
+        background: var(--brand);
+        color: white;
+        box-shadow: 0 12px 24px rgba(15, 118, 110, 0.18);
+      }
+
+      .primary:hover {
+        background: var(--brand-dark);
+      }
+
+      .secondary {
+        min-height: 38px;
+        padding: 0 12px;
+        background: var(--brand-soft);
+        color: var(--brand-dark);
+      }
+
+      .ghost {
+        min-height: 34px;
+        padding: 0 10px;
+        background: #f3f7f6;
+        color: var(--ink);
+      }
+
+      .danger {
+        background: #ffe4eb;
+        color: var(--danger);
+      }
+
+      .user-box {
+        margin-top: 14px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel-soft);
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .product {
+        display: grid;
+        gap: 10px;
+        min-height: 168px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .product h3 {
+        margin: 0;
+        font-size: 16px;
+      }
+
+      .product p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .price {
+        color: var(--brand-dark);
+        font-size: 20px;
+        font-weight: 900;
+      }
+
+      .cart-lines,
+      .orders {
+        display: grid;
+        gap: 10px;
+      }
+
+      .line,
+      .order {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        align-items: center;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .line strong,
+      .order strong {
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .line small,
+      .order small {
+        color: var(--muted);
+      }
+
+      .qty {
+        display: inline-grid;
+        grid-template-columns: 32px 38px 32px;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .qty span {
+        text-align: center;
+        font-weight: 800;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: 1fr 150px;
+        gap: 10px;
+        margin: 14px 0;
+      }
+
+      .summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+      }
+
+      .total {
+        font-size: 24px;
+        font-weight: 900;
+      }
+
+      .payment-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 26px;
+        padding: 0 9px;
+        border-radius: 999px;
+        background: #eef8f6;
+        color: var(--brand-dark);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .tag.warn {
+        background: #fff7d6;
+        color: var(--warning);
+      }
+
+      .tag.ok {
+        background: #dcfce7;
+        color: var(--ok);
+      }
+
+      .empty {
+        padding: 18px;
+        border: 1px dashed var(--line);
+        border-radius: 8px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .toast {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 10;
+        max-width: min(420px, calc(100% - 36px));
+        padding: 13px 15px;
+        border-radius: 8px;
+        background: var(--ink);
+        color: #fff;
+        box-shadow: var(--shadow);
+        transform: translateY(90px);
+        opacity: 0;
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      @media (max-width: 940px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .side {
+          position: static;
+        }
+
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 620px) {
+        .shell {
+          width: min(100% - 20px, 1180px);
+          padding-top: 16px;
+        }
+
+        .topbar {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .grid,
+        .toolbar {
+          grid-template-columns: 1fr;
+        }
+
+        .line,
+        .order,
+        .summary {
+          align-items: stretch;
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">RN</div>
+          <div>
+            <h1>Raizes API</h1>
+            <p class="subtitle">Painel funcional para demonstrar pedidos, estoque e pagamento mock.</p>
+          </div>
+        </div>
+        <div class="status-pill" id="apiStatus">Conectando com a API...</div>
+      </header>
+
+      <main class="layout">
+        <aside class="panel side">
+          <section>
+            <div class="section-head">
+              <h2>Acesso</h2>
+              <button class="ghost" id="logoutButton" type="button">Sair</button>
+            </div>
+            <div class="field">
+              <label for="email">E-mail</label>
+              <input id="email" autocomplete="username" value="cliente@raizes.local">
+            </div>
+            <div class="field">
+              <label for="password">Senha</label>
+              <input id="password" type="password" autocomplete="current-password" value="password123">
+            </div>
+            <button class="primary" id="loginButton" type="button">Entrar</button>
+            <div class="user-box" id="userBox">Use o cliente seed ou entre como admin para operar estoque.</div>
+          </section>
+
+          <section style="margin-top: 18px;">
+            <div class="section-head">
+              <h2>Estoque</h2>
+              <span class="hint">admin</span>
+            </div>
+            <div class="field">
+              <label for="stockProduct">Produto</label>
+              <select id="stockProduct"></select>
+            </div>
+            <div class="field">
+              <label for="stockQuantity">Quantidade</label>
+              <input id="stockQuantity" type="number" min="1" value="10">
+            </div>
+            <button class="secondary" id="stockButton" type="button">Adicionar estoque</button>
+          </section>
+        </aside>
+
+        <section class="main">
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Cardapio</h2>
+                <div class="hint">Escolha itens para montar um pedido real com persistencia.</div>
+              </div>
+              <button class="ghost" id="refreshButton" type="button">Atualizar</button>
+            </div>
+            <div class="grid" id="products"></div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Novo pedido</h2>
+                <div class="hint">O campo canalPedido e obrigatorio no roteiro.</div>
+              </div>
+              <span class="tag" id="cartCount">0 itens</span>
+            </div>
+            <div class="toolbar">
+              <select id="unitSelect"></select>
+              <select id="channelSelect">
+                <option value="APP">APP</option>
+                <option value="TOTEM" selected>TOTEM</option>
+                <option value="BALCAO">BALCAO</option>
+                <option value="PICKUP">PICKUP</option>
+                <option value="WEB">WEB</option>
+              </select>
+            </div>
+            <div class="cart-lines" id="cart"></div>
+            <div class="summary">
+              <div>
+                <div class="hint">Total do pedido</div>
+                <div class="total" id="cartTotal">R$ 0,00</div>
+              </div>
+              <button class="primary" id="createOrderButton" type="button">Criar pedido</button>
+            </div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Pagamento mock</h2>
+                <div class="hint">Use o ultimo pedido criado ou selecione um pedido na lista.</div>
+              </div>
+              <span class="tag warn" id="selectedOrder">Nenhum pedido</span>
+            </div>
+            <div class="payment-actions">
+              <button class="secondary" id="payApprovedButton" type="button">Aprovar pagamento</button>
+              <button class="secondary danger" id="payDeniedButton" type="button">Negar pagamento</button>
+              <button class="ghost" id="statusPreparingButton" type="button">Marcar preparando</button>
+            </div>
+          </div>
+
+          <div class="panel section">
+            <div class="section-head">
+              <div>
+                <h2>Pedidos</h2>
+                <div class="hint">Filtro por canal e status ja implementado na API.</div>
+              </div>
+              <button class="ghost" id="ordersButton" type="button">Recarregar</button>
+            </div>
+            <div class="orders" id="orders"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      const api = "/api/v1";
+      const state = {
+        token: localStorage.getItem("raizesToken"),
+        user: null,
+        units: [],
+        products: [],
+        cart: new Map(),
+        selectedOrderId: null
+      };
+
+      const els = {
+        apiStatus: document.querySelector("#apiStatus"),
+        email: document.querySelector("#email"),
+        password: document.querySelector("#password"),
+        loginButton: document.querySelector("#loginButton"),
+        logoutButton: document.querySelector("#logoutButton"),
+        userBox: document.querySelector("#userBox"),
+        products: document.querySelector("#products"),
+        unitSelect: document.querySelector("#unitSelect"),
+        channelSelect: document.querySelector("#channelSelect"),
+        cart: document.querySelector("#cart"),
+        cartCount: document.querySelector("#cartCount"),
+        cartTotal: document.querySelector("#cartTotal"),
+        createOrderButton: document.querySelector("#createOrderButton"),
+        selectedOrder: document.querySelector("#selectedOrder"),
+        payApprovedButton: document.querySelector("#payApprovedButton"),
+        payDeniedButton: document.querySelector("#payDeniedButton"),
+        statusPreparingButton: document.querySelector("#statusPreparingButton"),
+        orders: document.querySelector("#orders"),
+        ordersButton: document.querySelector("#ordersButton"),
+        refreshButton: document.querySelector("#refreshButton"),
+        stockProduct: document.querySelector("#stockProduct"),
+        stockQuantity: document.querySelector("#stockQuantity"),
+        stockButton: document.querySelector("#stockButton"),
+        toast: document.querySelector("#toast")
+      };
+
+      function money(cents) {
+        return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format((cents || 0) / 100);
+      }
+
+      function showToast(message) {
+        els.toast.textContent = message;
+        els.toast.classList.add("show");
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(() => els.toast.classList.remove("show"), 3200);
+      }
+
+      async function request(path, options = {}) {
+        const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+        if (state.token) headers.Authorization = `Bearer ${state.token}`;
+
+        const response = await fetch(`${api}${path}`, { ...options, headers });
+        const text = await response.text();
+        const body = text ? JSON.parse(text) : {};
+
+        if (!response.ok) {
+          const message = body.error?.message || "Erro ao chamar API.";
+          throw new Error(message);
+        }
+
+        return body;
+      }
+
+      async function loadBasics() {
+        const [units, products] = await Promise.all([
+          request("/unidades"),
+          request("/produtos")
+        ]);
+        state.units = units.data || [];
+        state.products = products.data || [];
+        renderUnits();
+        renderProducts();
+        renderCart();
+        els.apiStatus.textContent = "API online";
+      }
+
+      function renderUnits() {
+        els.unitSelect.innerHTML = state.units.map((unit) => (
+          `<option value="${unit.id}">${unit.name} - ${unit.city}/${unit.state}</option>`
+        )).join("");
+      }
+
+      function renderProducts() {
+        els.products.innerHTML = state.products.map((product) => `
+          <article class="product">
+            <div>
+              <h3>${product.name}</h3>
+              <p>${product.description || "Produto do cardapio."}</p>
+            </div>
+            <div class="price">${money(product.priceCents)}</div>
+            <button class="secondary" type="button" data-add="${product.id}">Adicionar</button>
+          </article>
+        `).join("");
+
+        els.stockProduct.innerHTML = state.products.map((product) => (
+          `<option value="${product.id}">${product.name}</option>`
+        )).join("");
+      }
+
+      function renderCart() {
+        const entries = [...state.cart.values()];
+        const total = entries.reduce((sum, item) => sum + item.product.priceCents * item.quantity, 0);
+        const count = entries.reduce((sum, item) => sum + item.quantity, 0);
+
+        els.cartCount.textContent = `${count} ${count === 1 ? "item" : "itens"}`;
+        els.cartTotal.textContent = money(total);
+        els.createOrderButton.disabled = !state.token || entries.length === 0;
+
+        if (!entries.length) {
+          els.cart.innerHTML = `<div class="empty">Adicione produtos do cardapio para criar um pedido.</div>`;
+          return;
+        }
+
+        els.cart.innerHTML = entries.map(({ product, quantity }) => `
+          <div class="line">
+            <div>
+              <strong>${product.name}</strong>
+              <small>${money(product.priceCents)} cada</small>
+            </div>
+            <div class="qty">
+              <button class="ghost" type="button" data-dec="${product.id}">-</button>
+              <span>${quantity}</span>
+              <button class="ghost" type="button" data-inc="${product.id}">+</button>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      function setSelectedOrder(id) {
+        state.selectedOrderId = id;
+        els.selectedOrder.textContent = id ? `Pedido #${id}` : "Nenhum pedido";
+        els.payApprovedButton.disabled = !id || !state.token;
+        els.payDeniedButton.disabled = !id || !state.token;
+        els.statusPreparingButton.disabled = !id || !state.token;
+      }
+
+      async function refreshOrders() {
+        if (!state.token) {
+          els.orders.innerHTML = `<div class="empty">Entre para visualizar pedidos.</div>`;
+          return;
+        }
+
+        const body = await request("/pedidos");
+        const orders = body.data || [];
+
+        if (!orders.length) {
+          els.orders.innerHTML = `<div class="empty">Nenhum pedido encontrado.</div>`;
+          return;
+        }
+
+        els.orders.innerHTML = orders.map((order) => `
+          <button class="order" type="button" data-order="${order.id}">
+            <span>
+              <strong>Pedido #${order.id} - ${money(order.totalCents)}</strong>
+              <small>${order.canalPedido} | ${order.unidade.name} | ${order.itens.length} item(ns)</small>
+            </span>
+            <span class="tag ${order.status === "pago" ? "ok" : ""}">${order.status}</span>
+          </button>
+        `).join("");
+      }
+
+      async function login() {
+        const body = await request("/auth/login", {
+          method: "POST",
+          body: JSON.stringify({ email: els.email.value, password: els.password.value })
+        });
+
+        state.token = body.token;
+        state.user = body.user;
+        localStorage.setItem("raizesToken", state.token);
+        renderUser();
+        renderCart();
+        await refreshOrders();
+        showToast("Login realizado com sucesso.");
+      }
+
+      async function loadMe() {
+        if (!state.token) {
+          renderUser();
+          return;
+        }
+
+        try {
+          const body = await request("/auth/me");
+          state.user = body.user;
+        } catch (_error) {
+          state.token = null;
+          localStorage.removeItem("raizesToken");
+        }
+        renderUser();
+      }
+
+      function renderUser() {
+        if (!state.user) {
+          els.userBox.textContent = "Use o cliente seed ou entre como admin para operar estoque.";
+          els.logoutButton.disabled = true;
+          els.stockButton.disabled = true;
+          return;
+        }
+
+        els.userBox.innerHTML = `<strong>${state.user.name}</strong><br>${state.user.email}<br>Perfil: ${state.user.role}`;
+        els.logoutButton.disabled = false;
+        els.stockButton.disabled = !["admin", "gerente"].includes(state.user.role);
+      }
+
+      async function createOrder() {
+        const itens = [...state.cart.values()].map(({ product, quantity }) => ({
+          produtoId: product.id,
+          quantidade: quantity
+        }));
+
+        const body = await request("/pedidos", {
+          method: "POST",
+          body: JSON.stringify({
+            unitId: Number(els.unitSelect.value),
+            canalPedido: els.channelSelect.value,
+            itens
+          })
+        });
+
+        state.cart.clear();
+        setSelectedOrder(body.data.id);
+        renderCart();
+        await refreshOrders();
+        showToast(`Pedido #${body.data.id} criado.`);
+      }
+
+      async function pay(cardToken) {
+        if (!state.selectedOrderId) return;
+
+        const body = await request(`/pedidos/${state.selectedOrderId}/pagamentos`, {
+          method: "POST",
+          body: JSON.stringify({ formaPagamento: "MOCK", cardToken })
+        });
+
+        await refreshOrders();
+        showToast(`Pagamento ${body.data.status}. Pedido ${body.order.status}.`);
+      }
+
+      async function markPreparing() {
+        if (!state.selectedOrderId) return;
+
+        await request(`/pedidos/${state.selectedOrderId}/status`, {
+          method: "PATCH",
+          body: JSON.stringify({ status: "preparando" })
+        });
+        await refreshOrders();
+        showToast("Pedido marcado como preparando.");
+      }
+
+      async function moveStock() {
+        await request("/estoques/movimentacoes", {
+          method: "POST",
+          body: JSON.stringify({
+            unitId: Number(els.unitSelect.value),
+            productId: Number(els.stockProduct.value),
+            kind: "entrada",
+            quantity: Number(els.stockQuantity.value)
+          })
+        });
+        showToast("Estoque atualizado.");
+      }
+
+      els.products.addEventListener("click", (event) => {
+        const id = event.target.dataset.add;
+        if (!id) return;
+        const product = state.products.find((item) => item.id === Number(id));
+        const current = state.cart.get(product.id) || { product, quantity: 0 };
+        current.quantity += 1;
+        state.cart.set(product.id, current);
+        renderCart();
+      });
+
+      els.cart.addEventListener("click", (event) => {
+        const inc = event.target.dataset.inc;
+        const dec = event.target.dataset.dec;
+        const id = Number(inc || dec);
+        if (!id) return;
+        const item = state.cart.get(id);
+        if (!item) return;
+        item.quantity += inc ? 1 : -1;
+        if (item.quantity <= 0) state.cart.delete(id);
+        renderCart();
+      });
+
+      els.orders.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-order]");
+        if (!button) return;
+        setSelectedOrder(Number(button.dataset.order));
+      });
+
+      els.loginButton.addEventListener("click", () => login().catch((error) => showToast(error.message)));
+      els.logoutButton.addEventListener("click", () => {
+        state.token = null;
+        state.user = null;
+        localStorage.removeItem("raizesToken");
+        setSelectedOrder(null);
+        renderUser();
+        renderCart();
+        refreshOrders();
+      });
+      els.refreshButton.addEventListener("click", () => loadBasics().catch((error) => showToast(error.message)));
+      els.ordersButton.addEventListener("click", () => refreshOrders().catch((error) => showToast(error.message)));
+      els.createOrderButton.addEventListener("click", () => createOrder().catch((error) => showToast(error.message)));
+      els.payApprovedButton.addEventListener("click", () => pay("APROVADO").catch((error) => showToast(error.message)));
+      els.payDeniedButton.addEventListener("click", () => pay("NEGADO").catch((error) => showToast(error.message)));
+      els.statusPreparingButton.addEventListener("click", () => markPreparing().catch((error) => showToast(error.message)));
+      els.stockButton.addEventListener("click", () => moveStock().catch((error) => showToast(error.message)));
+
+      async function boot() {
+        setSelectedOrder(null);
+        await loadBasics();
+        await loadMe();
+        await refreshOrders();
+      }
+
+      boot().catch((error) => {
+        els.apiStatus.textContent = "API indisponivel";
+        showToast(error.message);
+      });
+    </script>
+  </body>
+</html>
