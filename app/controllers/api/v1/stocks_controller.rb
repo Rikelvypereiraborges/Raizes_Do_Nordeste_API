@@ -8,7 +8,8 @@ module Api
         stocks = stocks.where(unit_id: params[:unitId]) if params[:unitId].present?
         stocks = stocks.where(product_id: params[:productId]) if params[:productId].present?
 
-        render json: { data: stocks.map { |stock| stock_json(stock) } }
+        stocks, meta = paginate(stocks)
+        render json: { data: stocks.map { |stock| stock_json(stock) }, meta: meta }
       end
 
       def move

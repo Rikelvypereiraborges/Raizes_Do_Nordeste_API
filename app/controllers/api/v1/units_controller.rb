@@ -4,7 +4,8 @@ module Api
       before_action :authenticate!, except: [ :index, :show ]
 
       def index
-        render json: { data: Unit.order(:name).map { |unit| unit_json(unit) } }
+        units, meta = paginate(Unit.order(:name))
+        render json: { data: units.map { |unit| unit_json(unit) }, meta: meta }
       end
 
       def show

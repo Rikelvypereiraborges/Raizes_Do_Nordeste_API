@@ -35,6 +35,8 @@ Colecao Postman:
 docs/raizes_api.postman_collection.json
 ```
 
+A colecao possui mais de 10 cenarios e inclui casos positivos e negativos do fluxo principal.
+
 ## Casos de teste
 
 | ID | Cenario | Endpoint | Entrada | Esperado |

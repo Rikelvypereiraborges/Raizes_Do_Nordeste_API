@@ -7,7 +7,8 @@ module Api
         products = Product.where(active: true).order(:name)
         products = products.joins(:stocks).where(stocks: { unit_id: params[:unitId] }).distinct if params[:unitId].present?
 
-        render json: { data: products.map { |product| product_json(product) } }
+        products, meta = paginate(products)
+        render json: { data: products.map { |product| product_json(product) }, meta: meta }
       end
 
       def show

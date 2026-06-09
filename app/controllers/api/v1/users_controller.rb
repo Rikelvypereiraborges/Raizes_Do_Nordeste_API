@@ -6,7 +6,8 @@ module Api
       def index
         return unless authorize!(:gerente, :admin)
 
-        render json: { data: User.order(:name).map { |user| user_json(user) } }
+        users, meta = paginate(User.order(:name))
+        render json: { data: users.map { |user| user_json(user) }, meta: meta }
       end
 
       def show
@@ -31,7 +32,7 @@ module Api
       private
 
       def user_params
-        params.permit(:name, :email, :password, :password_confirmation, :role)
+        params.permit(:name, :email, :password, :password_confirmation)
       end
     end
   end

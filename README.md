@@ -1,6 +1,6 @@
 # Raizes do Nordeste API
 
-API Rails criada para o Projeto Multidisciplinar - Trilha Back-End. O MVP tem o fluxo recomendado no roteiro: pedido multicanal, pagamento mock e atualizacao de status, com persistencia em banco.
+API Rails criada para o Projeto Multidisciplinar - Trilha Back-End. O projeto atende ao fluxo de pedidos da rede Raizes do Nordeste, com multicanalidade, estoque por unidade, pagamento mock, autenticacao por token e controle de permissao por perfil.
 
 ## Stack
 
@@ -25,6 +25,8 @@ ruby bin/rails db:prepare
 ruby bin/rails server
 ```
 
+Nao ha variaveis obrigatorias para execucao local. O arquivo `.env.example` fica no repositorio para manter o padrao de entrega.
+
 ## Dados de acesso
 
 O seed cria dois usuarios:
@@ -41,7 +43,9 @@ Com o servidor rodando:
 - OpenAPI JSON: `GET http://localhost:3000/api/v1/openapi.json`
 - Variaveis de ambiente: veja `.env.example`
 - Plano de testes: veja `docs/test_plan.md`
-- DER inicial: veja `docs/der.md`
+- Documento da entrega: veja `docs/documentacao_projeto.md`
+- DER: veja `docs/der.svg` e `docs/der.md`
+- Diagramas: veja os arquivos `docs/diagrama_*.svg`
 
 ## Fluxo principal para testar
 
@@ -99,13 +103,18 @@ Authorization: Bearer TOKEN
 - `GET /api/v1/auth/me`
 - `POST /api/v1/usuarios`
 - `GET /api/v1/usuarios`
+- `GET /api/v1/usuarios/:id`
 - `GET /api/v1/unidades`
+- `GET /api/v1/unidades/:id`
 - `POST /api/v1/unidades`
 - `GET /api/v1/produtos`
+- `GET /api/v1/produtos/:id`
 - `POST /api/v1/produtos`
+- `PATCH /api/v1/produtos/:id`
 - `GET /api/v1/estoques`
 - `POST /api/v1/estoques/movimentacoes`
 - `GET /api/v1/pedidos`
+- `GET /api/v1/pedidos/:id`
 - `POST /api/v1/pedidos`
 - `PATCH /api/v1/pedidos/:id/status`
 - `POST /api/v1/pedidos/:id/cancelar`
@@ -120,9 +129,10 @@ Authorization: Bearer TOKEN
 - Logs de auditoria registram login, criacao de pedido, pagamento, movimentacao de estoque e mudanca de status.
 - As respostas de usuario nao expõem `password_digest`.
 
-## Proximos itens para entrega final
+## Entrega
 
-- Criar colecao Postman/Insomnia com pelo menos 10 cenarios.
-- Transformar o DER textual em imagem/PDF e gerar os demais diagramas exigidos.
-- Completar o PDF academico em formato ABNT.
-- Publicar o repositorio e garantir links publicos.
+- Documentacao tecnica em `docs/documentacao_projeto.md` e `docs/documentacao_projeto.pdf`.
+- Referencia dos endpoints em `docs/api.md` e OpenAPI em `/api/v1/openapi.json`.
+- Colecao Postman em `docs/raizes_api.postman_collection.json`.
+- Plano de testes em `docs/test_plan.md`.
+- DER, casos de uso, classes e fluxo critico em `docs`.

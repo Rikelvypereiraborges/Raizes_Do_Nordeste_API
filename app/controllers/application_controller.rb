@@ -42,6 +42,19 @@ class ApplicationController < ActionController::API
     render_error(result.status || "erro_regra_negocio", result.errors.to_sentence, :unprocessable_entity)
   end
 
+  def paginate(scope)
+    page = params[:page].to_i
+    limit = params[:limit].to_i
+    page = 1 if page < 1
+    limit = 20 if limit < 1
+    limit = 100 if limit > 100
+
+    [
+      scope.offset((page - 1) * limit).limit(limit),
+      { page: page, limit: limit, total: scope.count }
+    ]
+  end
+
   def audit!(action, auditable: nil, metadata: {})
     AuditLog.create!(
       user: current_user,

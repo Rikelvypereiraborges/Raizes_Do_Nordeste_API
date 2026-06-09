@@ -9,7 +9,8 @@ module Api
         orders = orders.by_canal(params[:canalPedido])
         orders = orders.by_status(params[:status])
 
-        render json: { data: orders.map { |order| order_json(order) } }
+        orders, meta = paginate(orders)
+        render json: { data: orders.map { |order| order_json(order) }, meta: meta }
       end
 
       def show

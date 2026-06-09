@@ -11,6 +11,7 @@ Formato padrao:
 - Entrada: JSON.
 - Saida: JSON.
 - Autenticacao: `Authorization: Bearer TOKEN`.
+- Listagens aceitam `page` e `limit`. O retorno inclui `meta.page`, `meta.limit` e `meta.total`.
 
 ## Padrao de erro
 
@@ -18,7 +19,7 @@ Formato padrao:
 {
   "error": {
     "code": "codigo_do_erro",
-    "message": "Mensagem explicativa."
+    "message": "Mensagem do erro."
   }
 }
 ```
@@ -88,6 +89,11 @@ Lista usuarios.
 
 Permissao: `gerente` ou `admin`.
 
+Query params:
+
+- `page`: pagina, padrao `1`.
+- `limit`: itens por pagina, padrao `20`, maximo `100`.
+
 ### `GET /usuarios/:id`
 
 Consulta usuario por ID.
@@ -101,6 +107,11 @@ Permissao: proprio usuario, `gerente` ou `admin`.
 Lista unidades.
 
 Permissao: publico.
+
+Query params:
+
+- `page`: pagina, padrao `1`.
+- `limit`: itens por pagina, padrao `20`, maximo `100`.
 
 ### `GET /unidades/:id`
 
@@ -136,6 +147,8 @@ Permissao: publico.
 Query params:
 
 - `unitId`: filtra produtos com estoque em uma unidade.
+- `page`: pagina, padrao `1`.
+- `limit`: itens por pagina, padrao `20`, maximo `100`.
 
 ### `GET /produtos/:id`
 
@@ -187,6 +200,8 @@ Query params:
 
 - `unitId`: filtra por unidade.
 - `productId`: filtra por produto.
+- `page`: pagina, padrao `1`.
+- `limit`: itens por pagina, padrao `20`, maximo `100`.
 
 ### `POST /estoques/movimentacoes`
 
@@ -228,6 +243,8 @@ Query params:
 
 - `canalPedido`: `APP`, `TOTEM`, `BALCAO`, `PICKUP` ou `WEB`.
 - `status`: status atual do pedido.
+- `page`: pagina, padrao `1`.
+- `limit`: itens por pagina, padrao `20`, maximo `100`.
 
 ### `GET /pedidos/:id`
 
@@ -296,7 +313,7 @@ Status aceitos:
 
 Cancela pedido.
 
-Permissao: autenticado com acesso ao pedido.
+Permissao: cliente dono do pedido ou perfil interno autenticado.
 
 Regra: permitido apenas para pedidos em `aguardando_pagamento`, `pago` ou `preparando`.
 

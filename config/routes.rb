@@ -11,7 +11,8 @@ Rails.application.routes.draw do
 
       resources :users, path: "usuarios", only: [ :index, :show, :create ]
       resources :units, path: "unidades", only: [ :index, :show, :create ]
-      resources :products, path: "produtos", only: [ :index, :show, :create, :update ]
+      resources :products, path: "produtos", only: [ :index, :show, :create ]
+      patch "produtos/:id", to: "products#update"
 
       resources :stocks, path: "estoques", only: [ :index ] do
         collection do
