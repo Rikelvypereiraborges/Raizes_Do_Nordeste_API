@@ -24,7 +24,7 @@ Formato padrao:
 }
 ```
 
-## Autenticacao
+## Autenticação
 
 ### `POST /auth/login`
 
@@ -61,7 +61,7 @@ Resposta `200`:
 
 Retorna o usuario autenticado.
 
-Permissao: autenticado.
+Permissão: autenticado.
 
 ## Usuarios
 
@@ -69,7 +69,7 @@ Permissao: autenticado.
 
 Cadastra um novo usuario.
 
-Permissao: publico.
+Permissão: publico.
 
 Body:
 
@@ -87,7 +87,7 @@ Body:
 
 Lista usuarios.
 
-Permissao: `gerente` ou `admin`.
+Permissão: `gerente` ou `admin`.
 
 Query params:
 
