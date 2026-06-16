@@ -166,7 +166,7 @@ ruby bin/rails db:seed:replant
 ### 5. Subir o servidor
 
 ```bash
-ruby bin/rails server
+rails server
 ```
 
 A API ficara disponivel em:
@@ -190,22 +190,6 @@ Tambem existe uma interface demonstrativa em:
 ```text
 http://localhost:3000/
 ```
-
-### Observacao para Windows
-
-Caso o comando `bin/rails` nao execute diretamente no terminal, use sempre:
-
-```bash
-ruby bin/rails <comando>
-```
-
-Exemplo:
-
-```bash
-ruby bin/rails server
-```
-
----
 
 ## Usuarios iniciais
 
@@ -304,21 +288,21 @@ docs/raizes_api.postman_collection.json
 Para executar a suite de testes:
 
 ```bash
-ruby bin/rails test
+rails test
 ```
 
 Para executar verificacoes de qualidade e seguranca:
 
 ```bash
-ruby bin/rubocop
-ruby bin/brakeman --quiet --no-pager
-ruby bin/bundler-audit
+rubocop
+brakeman --quiet --no-pager
+bundler-audit
 ```
 
 Tambem existe um script para rodar as verificacoes principais:
 
 ```bash
-ruby bin/ci
+ci
 ```
 
 ---
