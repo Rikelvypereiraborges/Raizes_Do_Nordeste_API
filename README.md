@@ -432,4 +432,4 @@ Essa estrutura separa responsabilidades e facilita manutencao, testes e evolucao
 
 ## Autor
 
-Lucas
+Rikelvy Borges
